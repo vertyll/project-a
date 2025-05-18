@@ -1,0 +1,42 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/project-a_test
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+  mail:
+    host: localhost
+    port: 3025
+    username: test
+    password: test
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+
+security:
+  jwt:
+    secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+    access-token-expiration: 900000 # 15 minutes
+    refresh-token-expiration: 604800000 # 7 days
+    refresh-token-cookie-name: refresh_token
+
+application:
+  frontend:
+    url: http://localhost:4200
+  file:
+    uploads:
+      file-output-path: ./test-uploads
+
+server:
+  port: 0

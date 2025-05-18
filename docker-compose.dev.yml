@@ -1,0 +1,88 @@
+services:
+  db:
+    image: postgres:${POSTGRES_VERSION:-17}-alpine
+    container_name: postgres-sql-project-a
+    restart: always
+    ports:
+      - "${POSTGRES_HOST_DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-project-a}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - project-a
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  test-db:
+    image: postgres:${POSTGRES_VERSION:-17}-alpine
+    restart: always
+    ports:
+      - "${POSTGRES_HOST_TEST_PORT:-5433}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_TEST_DB:-project-a_test}
+    networks:
+      - project-a
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mail-dev:
+    image: maildev/maildev:${MAILDEV_VERSION:-latest}
+    container_name: mail-dev-project-a
+    restart: always
+    ports:
+      - "${MAIL_SMTP_PORT:-1025}:1025"
+      - "${MAIL_WEB_PORT:-1080}:1080"
+    networks:
+      - project-a
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+      target: ${DOCKER_ENV:-development}
+      args:
+        JAVA_VERSION: ${JAVA_VERSION:-21}
+        GRADLE_VERSION: ${GRADLE_VERSION:-8.14}
+        APP_PORT: ${BACKEND_PORT:-8080}
+        DEBUG_PORT: ${BACKEND_DEBUG_PORT:-5005}
+    container_name: project-a-backend
+    volumes:
+      - ./project-a-backend:/app
+      - gradle-cache:/home/gradle/.gradle
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+      - "${BACKEND_DEBUG_PORT:-5005}:5005"
+    environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB:-project-a}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+      - SPRING_MAIL_HOST=mail-dev
+      - SPRING_MAIL_PORT=${MAIL_SMTP_PORT:-1025}
+      - SERVER_PORT=${BACKEND_PORT:-8080}
+    networks:
+      - project-a
+    depends_on:
+      db:
+        condition: service_healthy
+      mail-dev:
+        condition: service_started
+
+networks:
+  project-a:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  gradle-cache:
