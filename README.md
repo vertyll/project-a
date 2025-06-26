@@ -1,9 +1,9 @@
-## Założenia projektu
-- w trakcie
+## Project Assumptions
+- in progress
 
-## Stos technologiczny
+## Technology Stack
 
-### Back-end:
+### Backend:
 - Spring Boot
 - Kotlin
 - Gradle Kotlin DSL
@@ -19,31 +19,31 @@
 - Spring Mail
 - OpenAPI (Swagger)
 
-### Front-end:
-- w trakcie
+### Frontend:
+- in progress
 
-### Uwierzytelnianie:
-- uwierzytelnianie za pomocą JWT - aplikacja korzysta z tokenów JWT do uwierzytelniania użytkowników i posiada mechanizm odświeżania tokenów
-- aplikacja pozwala na logowanie na wiele urządzeń jednocześnie
+### Authentication:
+- JWT-based authentication - the application uses JWT tokens for user authentication and includes token refresh mechanism
+- the application allows logging in on multiple devices simultaneously
 
-### Core back-end:
-- aplikacja posiada mechanizm obsługi wyjątków
-- aplikacja posiada mechanizm logowania
-- aplikacja posiada mechanizm wysyłania maili
-- aplikacja posiada mechanizm obsługi zadań cyklicznych (cron)
-- aplikacja posiada wydzielone środowiska dla dev i prod
-- aplikacja posiada wydzielony plik konfiguracyjny
-- aplikacja posiada RBAC (Role Based Access Control)
-- i wiele innych funkcjonalności, które można znaleźć w kodzie aplikacji
+### Core Backend:
+- the application has exception handling mechanism
+- the application has logging mechanism
+- the application has email sending mechanism
+- the application has scheduled task handling mechanism (cron)
+- the application has separate environments for dev and prod
+- the application has separate configuration file
+- the application has RBAC (Role Based Access Control)
+- and many other features that can be found in the application code
 
-### Core front-end:
-- w trakcie
+### Core Frontend:
+- in progress
 
-### Inne:
-- ktlint do statycznej analizy kodu i utrzymania jednolitej jakości kodu
-- Docker dla środowiska deweloperskiego
+### Other:
+- ktlint for static code analysis and maintaining consistent code quality
+- Docker for development environment
 
-**Podczas pisania aplikacji stosowano zasady SOLID, DRY, composition over inheritance, dependency injection, wzorce projektowe, wzorce architektoniczne, pisano testy oraz przyjęto inne dobre praktyki programistyczne.**
+**During application development, SOLID principles, DRY, composition over inheritance, dependency injection, design patterns, architectural patterns were applied, tests were written, and other good programming practices were adopted.**
 
-## Zdjęcia poglądowe
-- w trakcie
+## Preview Screenshots
+- in progress
