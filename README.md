@@ -3,7 +3,7 @@
 
 ## Technology Stack
 
-### Backend:
+### Back-end:
 - Spring Boot
 - Kotlin
 - Gradle Kotlin DSL
@@ -19,14 +19,14 @@
 - Spring Mail
 - OpenAPI (Swagger)
 
-### Frontend:
+### Front-end:
 - in progress
 
 ### Authentication:
 - JWT-based authentication - the application uses JWT tokens for user authentication and includes token refresh mechanism
 - the application allows logging in on multiple devices simultaneously
 
-### Core Backend:
+### Core back-end:
 - the application has exception handling mechanism
 - the application has logging mechanism
 - the application has email sending mechanism
@@ -36,7 +36,7 @@
 - the application has RBAC (Role Based Access Control)
 - and many other features that can be found in the application code
 
-### Core Frontend:
+### Core front-end:
 - in progress
 
 ### Other:
