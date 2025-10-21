@@ -43,7 +43,7 @@
 - ktlint for static code analysis and maintaining consistent code quality
 - Docker for development environment
 
-**During application development, SOLID principles, DRY, composition over inheritance, dependency injection, design patterns, architectural patterns were applied, tests were written, and other good programming practices were adopted.**
+> **Note:** During application development, SOLID principles, DRY, composition over inheritance, dependency injection, design patterns, architectural patterns were applied, tests were written, and other good programming practices were adopted.
 
 ## Preview Screenshots
 - in progress
