@@ -10,6 +10,9 @@ plugins {
 group = "com.vertyll"
 version = "0.0.1-SNAPSHOT"
 
+extra["author"] = "Mikołaj Gawron"
+extra["email"] = "gawrmiko@gmail.com"
+
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
