@@ -36,7 +36,8 @@ class RoleService(
         dto: RoleUpdateDto,
     ): RoleResponseDto {
         val role =
-            roleRepository.findById(id)
+            roleRepository
+                .findById(id)
                 .orElseThrow { ApiException("Role not found", HttpStatus.NOT_FOUND) }
 
         if (roleRepository.existsByName(dto.name) && role.name != dto.name) {
@@ -54,8 +55,9 @@ class RoleService(
         return mapToDto(savedRole)
     }
 
-    fun getOrCreateDefaultRole(roleName: String): Role {
-        return roleRepository.findByName(roleName)
+    fun getOrCreateDefaultRole(roleName: String): Role =
+        roleRepository
+            .findByName(roleName)
             .orElseGet {
                 val role =
                     Role(
@@ -64,20 +66,19 @@ class RoleService(
                     )
                 roleRepository.save(role)
             }
-    }
 
     fun getRoleById(id: Long): RoleResponseDto {
         val role =
-            roleRepository.findById(id)
+            roleRepository
+                .findById(id)
                 .orElseThrow { ApiException("Role not found", HttpStatus.NOT_FOUND) }
         return mapToDto(role)
     }
 
-    private fun mapToDto(role: Role): RoleResponseDto {
-        return RoleResponseDto(
+    private fun mapToDto(role: Role): RoleResponseDto =
+        RoleResponseDto(
             id = role.id ?: 0L,
             name = role.name,
             description = role.description,
         )
-    }
 }

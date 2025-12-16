@@ -1,14 +1,14 @@
 services:
   db:
     image: postgres:${POSTGRES_VERSION:-17}-alpine
-    container_name: postgres-sql-project-a
+    container_name: project-a-postgre-sql
     restart: always
     ports:
       - "${POSTGRES_HOST_DB_PORT:-5432}:5432"
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-project-a}
+      POSTGRES_DB: ${POSTGRES_DB:-project_a}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -20,6 +20,7 @@ services:
       retries: 5
 
   test-db:
+    container_name: project-a-postgre-sql-test
     image: postgres:${POSTGRES_VERSION:-17}-alpine
     restart: always
     ports:
@@ -27,7 +28,7 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_TEST_DB:-project-a_test}
+      POSTGRES_DB: ${POSTGRES_TEST_DB:-project_a_test}
     networks:
       - project-a
     healthcheck:
@@ -38,7 +39,7 @@ services:
 
   mail-dev:
     image: maildev/maildev:${MAILDEV_VERSION:-latest}
-    container_name: mail-dev-project-a
+    container_name: project-a-mail-dev
     restart: always
     ports:
       - "${MAIL_SMTP_PORT:-1025}:1025"
@@ -52,8 +53,8 @@ services:
       dockerfile: docker/backend.Dockerfile
       target: ${DOCKER_ENV:-development}
       args:
-        JAVA_VERSION: ${JAVA_VERSION:-21}
-        GRADLE_VERSION: ${GRADLE_VERSION:-8.14}
+        JAVA_VERSION: ${JAVA_VERSION:-25}
+        GRADLE_VERSION: ${GRADLE_VERSION:-9.2.1}
         APP_PORT: ${BACKEND_PORT:-8080}
         DEBUG_PORT: ${BACKEND_DEBUG_PORT:-5005}
     container_name: project-a-backend
@@ -65,7 +66,7 @@ services:
       - "${BACKEND_DEBUG_PORT:-5005}:5005"
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-dev}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB:-project-a}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${POSTGRES_DB:-project_a}
       - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER:-postgres}
       - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD:-postgres}
       - SPRING_MAIL_HOST=mail-dev

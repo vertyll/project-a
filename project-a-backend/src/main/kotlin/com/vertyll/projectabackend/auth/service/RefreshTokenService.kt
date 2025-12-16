@@ -29,7 +29,7 @@ class RefreshTokenService(
     ): String {
         val tokenValue = UUID.randomUUID().toString()
 
-        val hashedToken = passwordEncoder.encode(tokenValue)
+        val hashedToken = requireNotNull(passwordEncoder.encode(tokenValue)) { "Token encoding failed" }
 
         val refreshToken =
             RefreshToken(
@@ -51,7 +51,8 @@ class RefreshTokenService(
     @Transactional(readOnly = true)
     fun validateRefreshToken(token: String): User {
         val allTokens =
-            refreshTokenRepository.findAll()
+            refreshTokenRepository
+                .findAll()
                 .filter { !it.revoked && it.expiryDate.isAfter(Instant.now()) }
 
         val refreshToken =
@@ -71,7 +72,8 @@ class RefreshTokenService(
         deviceInfo: String? = null,
     ): String {
         val allTokens =
-            refreshTokenRepository.findAll()
+            refreshTokenRepository
+                .findAll()
                 .filter { !it.revoked && it.expiryDate.isAfter(Instant.now()) }
 
         val refreshToken =
@@ -90,7 +92,8 @@ class RefreshTokenService(
     @Transactional
     fun revokeRefreshToken(token: String) {
         val allTokens =
-            refreshTokenRepository.findAll()
+            refreshTokenRepository
+                .findAll()
                 .filter { !it.revoked && it.expiryDate.isAfter(Instant.now()) }
 
         val refreshToken =
@@ -113,10 +116,10 @@ class RefreshTokenService(
      * Gets all active sessions for a user
      */
     @Transactional(readOnly = true)
-    fun getUserActiveSessions(user: User): List<RefreshToken> {
-        return refreshTokenRepository.findByUserAndRevoked(user, false)
+    fun getUserActiveSessions(user: User): List<RefreshToken> =
+        refreshTokenRepository
+            .findByUserAndRevoked(user, false)
             .filter { it.expiryDate.isAfter(Instant.now()) }
-    }
 
     /**
      * Scheduled task to delete expired tokens

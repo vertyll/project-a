@@ -15,13 +15,12 @@ import java.time.LocalDateTime
 @RestControllerAdvice
 class GlobalExceptionHandler {
     @ExceptionHandler(ApiException::class)
-    fun handleApiException(ex: ApiException): ResponseEntity<ApiResponse<Nothing?>> {
-        return ApiResponse.buildResponse(
+    fun handleApiException(ex: ApiException): ResponseEntity<ApiResponse<Nothing?>> =
+        ApiResponse.buildResponse(
             null,
             ex.message,
             ex.status,
         )
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationException(ex: MethodArgumentNotValidException): ResponseEntity<ValidationErrorResponse> {
@@ -49,41 +48,37 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException::class)
     @Suppress("UNUSED_PARAMETER")
-    fun handleBadCredentialsException(ignoredEx: BadCredentialsException): ResponseEntity<ApiResponse<Nothing?>> {
-        return ApiResponse.buildResponse(
+    fun handleBadCredentialsException(ignoredEx: BadCredentialsException): ResponseEntity<ApiResponse<Nothing?>> =
+        ApiResponse.buildResponse(
             null,
             "Invalid email or password",
             HttpStatus.UNAUTHORIZED,
         )
-    }
 
     @ExceptionHandler(DisabledException::class)
     @Suppress("UNUSED_PARAMETER")
-    fun handleDisabledException(ignoredEx: DisabledException): ResponseEntity<ApiResponse<Nothing?>> {
-        return ApiResponse.buildResponse(
+    fun handleDisabledException(ignoredEx: DisabledException): ResponseEntity<ApiResponse<Nothing?>> =
+        ApiResponse.buildResponse(
             null,
             "Account is disabled",
             HttpStatus.FORBIDDEN,
         )
-    }
 
     @ExceptionHandler(LockedException::class)
     @Suppress("UNUSED_PARAMETER")
-    fun handleLockedException(ignoredEx: LockedException): ResponseEntity<ApiResponse<Nothing?>> {
-        return ApiResponse.buildResponse(
+    fun handleLockedException(ignoredEx: LockedException): ResponseEntity<ApiResponse<Nothing?>> =
+        ApiResponse.buildResponse(
             null,
             "Account is locked",
             HttpStatus.FORBIDDEN,
         )
-    }
 
     @ExceptionHandler(Exception::class)
     @Suppress("UNUSED_PARAMETER")
-    fun handleException(ignoredEx: Exception): ResponseEntity<ApiResponse<Nothing?>> {
-        return ApiResponse.buildResponse(
+    fun handleException(ignoredEx: Exception): ResponseEntity<ApiResponse<Nothing?>> =
+        ApiResponse.buildResponse(
             null,
             "An unexpected error occurred",
             HttpStatus.INTERNAL_SERVER_ERROR,
         )
-    }
 }

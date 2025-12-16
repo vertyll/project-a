@@ -53,7 +53,7 @@ class AuthService(
                 firstName = request.firstName,
                 lastName = request.lastName,
                 email = request.email,
-                password = passwordEncoder.encode(request.password),
+                password = requireNotNull(passwordEncoder.encode(request.password)) { "Password encoding failed" },
                 roles = setOf(roleService.getOrCreateDefaultRole("USER")).toMutableSet(),
                 enabled = false,
             )
@@ -88,7 +88,8 @@ class AuthService(
         )
 
         val user =
-            userRepository.findByEmailWithRoles(request.email)
+            userRepository
+                .findByEmailWithRoles(request.email)
                 .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
 
         if (!user.isEnabled) {
@@ -170,10 +171,12 @@ class AuthService(
     @Transactional
     fun getUserActiveSessions(email: String): List<Map<String, Any>> {
         val user =
-            userRepository.findByEmailWithRoles(email)
+            userRepository
+                .findByEmailWithRoles(email)
                 .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
 
-        return refreshTokenService.getUserActiveSessions(user)
+        return refreshTokenService
+            .getUserActiveSessions(user)
             .map { token ->
                 mapOf<String, Any>(
                     "id" to (token.id ?: 0L),
@@ -266,7 +269,8 @@ class AuthService(
         val currentEmail = authentication.name
 
         val user =
-            userRepository.findByEmailWithRoles(currentEmail)
+            userRepository
+                .findByEmailWithRoles(currentEmail)
                 .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
 
         if (!passwordEncoder.matches(request.currentPassword, user.password)) {
@@ -346,7 +350,8 @@ class AuthService(
         val email = authentication.name
 
         val user =
-            userRepository.findByEmailWithRoles(email)
+            userRepository
+                .findByEmailWithRoles(email)
                 .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
 
         if (!passwordEncoder.matches(request.currentPassword, user.password)) {
@@ -359,7 +364,7 @@ class AuthService(
             user = user,
             token = verificationCode,
             tokenType = VerificationTokenType.PASSWORD_CHANGE,
-            additionalData = passwordEncoder.encode(request.newPassword),
+            additionalData = requireNotNull(passwordEncoder.encode(request.newPassword)) { "Password encoding failed" },
         )
 
         emailService.sendEmail(
@@ -404,7 +409,8 @@ class AuthService(
     @Throws(MessagingException::class)
     fun sendPasswordResetEmail(email: String) {
         val user =
-            userRepository.findByEmailWithRoles(email)
+            userRepository
+                .findByEmailWithRoles(email)
                 .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
 
         val verificationCode = generateVerificationCode()
@@ -445,7 +451,7 @@ class AuthService(
 
         val user = verificationToken.user ?: throw ApiException("User not found", HttpStatus.NOT_FOUND)
 
-        val newPasswordHash = passwordEncoder.encode(request.newPassword)
+        val newPasswordHash = requireNotNull(passwordEncoder.encode(request.newPassword)) { "Password encoding failed" }
 
         val updatedUser = createUpdatedUser(user, password = newPasswordHash)
 
@@ -465,19 +471,19 @@ class AuthService(
      * @return The verification token
      * @throws ApiException If the verification code is invalid
      */
-    private fun getVerificationTokenByCode(code: String): VerificationToken {
-        return tokenRepository.findByToken(code)
+    private fun getVerificationTokenByCode(code: String): VerificationToken =
+        tokenRepository
+            .findByToken(code)
             .orElseThrow { ApiException("Invalid verification code", HttpStatus.BAD_REQUEST) }
-    }
 
     /**
      * Gets the current authentication from the security context.
      *
      * @return The current authentication
      */
-    private fun getCurrentAuthentication(): Authentication {
-        return SecurityContextHolder.getContext().authentication
-    }
+    private fun getCurrentAuthentication(): Authentication =
+        SecurityContextHolder.getContext().authentication
+            ?: throw ApiException("Unauthorized", HttpStatus.UNAUTHORIZED)
 
     /**
      * Creates an updated user instance while preserving the original ID.

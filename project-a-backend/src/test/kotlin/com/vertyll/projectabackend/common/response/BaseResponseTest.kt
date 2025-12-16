@@ -36,13 +36,12 @@ class BaseResponseTest {
                 return this
             }
 
-            fun build(): TestBaseResponse<T> {
-                return TestBaseResponse(
+            fun build(): TestBaseResponse<T> =
+                TestBaseResponse(
                     data,
                     message ?: "",
                     timestamp,
                 )
-            }
         }
     }
 
@@ -55,7 +54,8 @@ class BaseResponseTest {
 
         // when
         val response =
-            TestBaseResponse.builder<String>()
+            TestBaseResponse
+                .builder<String>()
                 .data(testData)
                 .message(testMessage)
                 .timestamp(testTime)
@@ -72,7 +72,8 @@ class BaseResponseTest {
         // when
         val now = LocalDateTime.now()
         val response =
-            TestBaseResponse.builder<String>()
+            TestBaseResponse
+                .builder<String>()
                 .data("") // empty string as data
                 .message("")
                 .timestamp(now)
@@ -88,7 +89,8 @@ class BaseResponseTest {
     fun builderShouldSetDefaultTimestamp() {
         // when
         val response =
-            TestBaseResponse.builder<String>()
+            TestBaseResponse
+                .builder<String>()
                 .data("test")
                 .message("message")
                 .build()
@@ -101,7 +103,8 @@ class BaseResponseTest {
     fun shouldCreateResponseWithNullData() {
         // when
         val response =
-            TestBaseResponse.builder<String>()
+            TestBaseResponse
+                .builder<String>()
                 .data(null)
                 .message("message")
                 .build()

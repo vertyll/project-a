@@ -113,7 +113,8 @@ class JwtServiceTest {
         val expiredToken = "expired.jwt.token"
 
         doThrow(ExpiredJwtException(null, null, "Expired"))
-            .whenever(spyService).extractUsername(expiredToken)
+            .whenever(spyService)
+            .extractUsername(expiredToken)
 
         val result = spyService.isTokenValid(expiredToken, mockUserDetails)
         assertFalse(result)

@@ -20,7 +20,8 @@ class ApplicationAuditAware : AuditorAware<String> {
             return Optional.of(SYSTEM_ACCOUNT)
         }
 
-        return Optional.ofNullable(authentication.name)
+        return Optional
+            .ofNullable(authentication.name)
             .filter { name -> name.isNotBlank() }
             .or { Optional.of(SYSTEM_ACCOUNT) }
     }

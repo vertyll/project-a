@@ -33,10 +33,9 @@ class User(
     var roles: MutableSet<Role> = HashSet(),
     @Column(nullable = false)
     var enabled: Boolean = false,
-) : BaseEntity(), UserDetails {
-    override fun getAuthorities(): Collection<GrantedAuthority> {
-        return roles.map { SimpleGrantedAuthority("ROLE_${it.name}") }
-    }
+) : BaseEntity(),
+    UserDetails {
+    override fun getAuthorities(): Collection<GrantedAuthority> = roles.map { SimpleGrantedAuthority("ROLE_${it.name}") }
 
     override fun getUsername(): String = email
 
@@ -59,8 +58,8 @@ class User(
             password: String,
             roles: MutableSet<Role> = HashSet(),
             enabled: Boolean = false,
-        ): User {
-            return User(
+        ): User =
+            User(
                 firstName = firstName,
                 lastName = lastName,
                 email = email,
@@ -68,6 +67,5 @@ class User(
                 roles = roles,
                 enabled = enabled,
             )
-        }
     }
 }

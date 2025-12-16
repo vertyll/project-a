@@ -1,18 +1,23 @@
 spring:
+  application:
+    name: project-a-backend
+
   profiles:
     active: dev
+
+  flyway:
+    validate-on-migrate: true
+
   servlet:
     multipart:
       max-file-size: 50MB
-  jpa:
-    open-in-view: false
+      max-request-size: 50MB
 
-logging:
-  level:
-    org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer: ERROR
-
-springdoc:
-  default-produces-media-type: application/json
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
 
 server:
   servlet:

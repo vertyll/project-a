@@ -105,7 +105,13 @@ class AuthController(
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get all active sessions for the current user")
     fun getSessions(): ResponseEntity<ApiResponse<List<Map<String, Any>>>> {
-        val authentication = SecurityContextHolder.getContext().authentication
+        val authentication =
+            SecurityContextHolder.getContext().authentication
+                ?: return ApiResponse.buildResponse(
+                    null,
+                    "Unauthorized",
+                    HttpStatus.UNAUTHORIZED,
+                )
         val email = authentication.name
 
         val sessions = authService.getUserActiveSessions(email)

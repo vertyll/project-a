@@ -39,7 +39,7 @@ class UserService(
                 firstName = dto.firstName,
                 lastName = dto.lastName,
                 email = dto.email,
-                password = passwordEncoder.encode(dto.password),
+                password = requireNotNull(passwordEncoder.encode(dto.password)) { "Password encoding failed" },
                 roles = roles,
                 enabled = true,
             )
@@ -54,7 +54,8 @@ class UserService(
         dto: UserUpdateDto,
     ): UserResponseDto {
         val user =
-            userRepository.findById(id)
+            userRepository
+                .findById(id)
                 .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
 
         dto.firstName.let { user.firstName = it }
@@ -78,13 +79,14 @@ class UserService(
 
     fun getUserById(id: Long): UserResponseDto {
         val user =
-            userRepository.findById(id)
+            userRepository
+                .findById(id)
                 .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
         return mapToDto(user)
     }
 
-    private fun mapToDto(user: User): UserResponseDto {
-        return UserResponseDto(
+    private fun mapToDto(user: User): UserResponseDto =
+        UserResponseDto(
             id = user.id ?: 0L,
             firstName = user.firstName,
             lastName = user.lastName,
@@ -92,5 +94,4 @@ class UserService(
             roles = user.roles.map { it.name }.toSet(),
             enabled = user.isEnabled,
         )
-    }
 }

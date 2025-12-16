@@ -3,7 +3,6 @@ package com.vertyll.projectabackend.email.service
 import com.vertyll.projectabackend.email.enums.EmailTemplateName
 import jakarta.mail.MessagingException
 import jakarta.mail.internet.MimeMessage
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.mail.javamail.JavaMailSender
@@ -25,10 +24,8 @@ class SmtpEmailService(
     private val mailSender: JavaMailSender,
     private val templateEngine: SpringTemplateEngine,
 ) : IEmailService {
-    @Value("\${spring.mail.from}")
+    @Value($$"${spring.mail.from}")
     private lateinit var fromEmail: String
-
-    private val logger = LoggerFactory.getLogger(SmtpEmailService::class.java)
 
     @Async
     @Throws(MessagingException::class)

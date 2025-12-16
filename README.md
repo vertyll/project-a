@@ -1,5 +1,5 @@
 ## Project Assumptions
-- in progress
+- Showcase Kotlin and Spring Boot API.
 
 ## Technology Stack
 
@@ -17,10 +17,8 @@
 - Spring Data
 - Spring Web
 - Spring Mail
+- Flyway
 - OpenAPI (Swagger)
-
-### Front-end:
-- in progress
 
 ### Authentication:
 - JWT-based authentication - the application uses JWT tokens for user authentication and includes token refresh mechanism (http only secure cookie)
@@ -34,16 +32,12 @@
 - the application has separate environments for dev and prod
 - the application has separate configuration file
 - the application has RBAC (Role Based Access Control)
+- the application has Flyway database migration mechanism
 - and many other features that can be found in the application code
 
-### Core front-end:
-- in progress
-
 ### Other:
+- Detekt for static code analysis
 - ktlint for static code analysis and maintaining consistent code quality
 - Docker for development environment
 
 > **Note:** During application development, SOLID principles, DRY, composition over inheritance, dependency injection, design patterns, architectural patterns were applied, tests were written, and other good programming practices were adopted.
-
-## Preview Screenshots
-- in progress

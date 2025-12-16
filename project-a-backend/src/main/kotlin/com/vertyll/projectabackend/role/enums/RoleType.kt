@@ -7,7 +7,5 @@ enum class RoleType {
     EMPLOYEE,
     ;
 
-    fun getAuthority(): String {
-        return "ROLE_$name"
-    }
+    fun getAuthority(): String = "ROLE_$name"
 }

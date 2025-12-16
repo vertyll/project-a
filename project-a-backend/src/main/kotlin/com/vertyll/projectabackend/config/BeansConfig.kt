@@ -13,24 +13,22 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 @EnableJpaAuditing(auditorAwareRef = "auditorAware")
 @EnableScheduling
 class BeansConfig {
-    @Value("\${application.frontend.url}")
+    @Value($$"${application.frontend.url}")
     private lateinit var frontendUrl: String
 
     @Bean
-    fun auditorAware(): AuditorAware<String> {
-        return ApplicationAuditAware()
-    }
+    fun auditorAware(): AuditorAware<String> = ApplicationAuditAware()
 
     @Bean
-    fun corsConfigurer(): WebMvcConfigurer {
-        return object : WebMvcConfigurer {
+    fun corsConfigurer(): WebMvcConfigurer =
+        object : WebMvcConfigurer {
             override fun addCorsMappings(registry: CorsRegistry) {
-                registry.addMapping("/**")
+                registry
+                    .addMapping("/**")
                     .allowedOrigins(frontendUrl)
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
                     .allowedHeaders("*")
                     .allowCredentials(true)
             }
         }
-    }
 }
