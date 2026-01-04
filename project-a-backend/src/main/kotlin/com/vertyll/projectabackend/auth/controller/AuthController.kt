@@ -36,7 +36,7 @@ class AuthController(
     @Throws(MessagingException::class)
     fun register(
         @RequestBody @Valid request: RegisterRequestDto,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.register(request)
         return ApiResponse.buildResponse(
             null,
@@ -78,7 +78,7 @@ class AuthController(
     fun logout(
         request: HttpServletRequest,
         response: HttpServletResponse,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.logout(request, response)
         return ApiResponse.buildResponse(
             null,
@@ -92,7 +92,7 @@ class AuthController(
     fun logoutAll(
         request: HttpServletRequest,
         response: HttpServletResponse,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.logoutAllSessions(request, response)
         return ApiResponse.buildResponse(
             null,
@@ -126,7 +126,7 @@ class AuthController(
     @Operation(summary = "Verify user account with code")
     fun verifyAccount(
         @RequestParam code: String,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.verifyAccount(code)
         return ApiResponse.buildResponse(
             null,
@@ -141,8 +141,7 @@ class AuthController(
     @Throws(MessagingException::class)
     fun requestEmailChange(
         @RequestBody @Valid request: ChangeEmailRequestDto,
-        response: HttpServletResponse,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.requestEmailChange(request)
         return ApiResponse.buildResponse(
             null,
@@ -158,7 +157,7 @@ class AuthController(
         request: HttpServletRequest,
         response: HttpServletResponse,
     ): ResponseEntity<ApiResponse<AuthResponseDto>> {
-        val authResponse = authService.verifyEmailChange(code, request, response)
+        val authResponse = authService.verifyEmailChange(code, response)
         return ApiResponse.buildResponse(
             authResponse,
             "Email changed successfully",
@@ -172,7 +171,7 @@ class AuthController(
     @Throws(MessagingException::class)
     fun requestPasswordChange(
         @RequestBody @Valid request: ChangePasswordRequestDto,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.requestPasswordChange(request)
         return ApiResponse.buildResponse(
             null,
@@ -185,7 +184,7 @@ class AuthController(
     @Operation(summary = "Verify password change with code")
     fun verifyPasswordChange(
         @RequestParam code: String,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.verifyPasswordChange(code)
         return ApiResponse.buildResponse(
             null,
@@ -199,7 +198,7 @@ class AuthController(
     @Throws(MessagingException::class)
     fun requestPasswordReset(
         @RequestParam email: String,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.sendPasswordResetEmail(email)
         return ApiResponse.buildResponse(
             null,
@@ -213,7 +212,7 @@ class AuthController(
     fun resetPassword(
         @RequestParam token: String,
         @RequestBody @Valid request: ResetPasswordRequestDto,
-    ): ResponseEntity<ApiResponse<Void>> {
+    ): ResponseEntity<ApiResponse<Unit>> {
         authService.resetPassword(token, request)
         return ApiResponse.buildResponse(
             null,

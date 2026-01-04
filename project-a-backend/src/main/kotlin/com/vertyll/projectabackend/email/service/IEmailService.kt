@@ -8,7 +8,7 @@ import jakarta.mail.MessagingException
  * This interface defines the contract for sending emails in the application.
  * Implementations can use different email providers or strategies.
  */
-interface IEmailService {
+fun interface IEmailService {
     /**
      * Sends an email to the specified recipient.
      *

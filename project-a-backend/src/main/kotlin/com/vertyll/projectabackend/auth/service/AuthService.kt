@@ -41,6 +41,14 @@ class AuthService(
     private val authenticationManager: AuthenticationManager,
     private val emailService: IEmailService,
 ) {
+    companion object {
+        private const val ERROR_PASSWORD_ENCODING_FAILED = "Password encoding failed"
+        private const val ERROR_USER_NOT_FOUND = "User not found"
+        private const val ERROR_VERIFICATION_CODE_ALREADY_USED = "Verification code already used"
+        private const val ERROR_VERIFICATION_CODE_EXPIRED = "Verification code expired"
+        private const val ERROR_INVALID_VERIFICATION_CODE_TYPE = "Invalid verification code type"
+    }
+
     @Transactional
     @Throws(MessagingException::class)
     fun register(request: RegisterRequestDto) {
@@ -53,7 +61,7 @@ class AuthService(
                 firstName = request.firstName,
                 lastName = request.lastName,
                 email = request.email,
-                password = requireNotNull(passwordEncoder.encode(request.password)) { "Password encoding failed" },
+                password = requireNotNull(passwordEncoder.encode(request.password)) { ERROR_PASSWORD_ENCODING_FAILED },
                 roles = setOf(roleService.getOrCreateDefaultRole("USER")).toMutableSet(),
                 enabled = false,
             )
@@ -90,7 +98,7 @@ class AuthService(
         val user =
             userRepository
                 .findByEmailWithRoles(request.email)
-                .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
+                .orElseThrow { ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND) }
 
         if (!user.isEnabled) {
             throw ApiException("Account not verified", HttpStatus.FORBIDDEN)
@@ -173,7 +181,7 @@ class AuthService(
         val user =
             userRepository
                 .findByEmailWithRoles(email)
-                .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
+                .orElseThrow { ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND) }
 
         return refreshTokenService
             .getUserActiveSessions(user)
@@ -191,18 +199,18 @@ class AuthService(
         val verificationToken = getVerificationTokenByCode(code)
 
         if (verificationToken.used) {
-            throw ApiException("Verification code already used", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_VERIFICATION_CODE_ALREADY_USED, HttpStatus.BAD_REQUEST)
         }
 
         if (verificationToken.expiryDate.isBefore(LocalDateTime.now())) {
-            throw ApiException("Verification code expired", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_VERIFICATION_CODE_EXPIRED, HttpStatus.BAD_REQUEST)
         }
 
         if (verificationToken.tokenType != VerificationTokenType.ACCOUNT_ACTIVATION) {
-            throw ApiException("Invalid verification code type", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_INVALID_VERIFICATION_CODE_TYPE, HttpStatus.BAD_REQUEST)
         }
 
-        val user = verificationToken.user ?: throw ApiException("User not found", HttpStatus.NOT_FOUND)
+        val user = verificationToken.user ?: throw ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND)
         user.enabled = true
         verificationToken.used = true
 
@@ -271,7 +279,7 @@ class AuthService(
         val user =
             userRepository
                 .findByEmailWithRoles(currentEmail)
-                .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
+                .orElseThrow { ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND) }
 
         if (!passwordEncoder.matches(request.currentPassword, user.password)) {
             throw ApiException("Invalid current password", HttpStatus.BAD_REQUEST)
@@ -302,24 +310,23 @@ class AuthService(
     @Transactional
     fun verifyEmailChange(
         code: String,
-        request: HttpServletRequest,
         response: HttpServletResponse,
     ): AuthResponseDto {
         val verificationToken = getVerificationTokenByCode(code)
 
         if (verificationToken.used) {
-            throw ApiException("Verification code already used", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_VERIFICATION_CODE_ALREADY_USED, HttpStatus.BAD_REQUEST)
         }
 
         if (verificationToken.expiryDate.isBefore(LocalDateTime.now())) {
-            throw ApiException("Verification code expired", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_VERIFICATION_CODE_EXPIRED, HttpStatus.BAD_REQUEST)
         }
 
         if (verificationToken.tokenType != VerificationTokenType.EMAIL_CHANGE) {
-            throw ApiException("Invalid verification code type", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_INVALID_VERIFICATION_CODE_TYPE, HttpStatus.BAD_REQUEST)
         }
 
-        val user = verificationToken.user ?: throw ApiException("User not found", HttpStatus.NOT_FOUND)
+        val user = verificationToken.user ?: throw ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND)
         val newEmail = verificationToken.additionalData ?: throw ApiException("New email not found", HttpStatus.BAD_REQUEST)
 
         val updatedUser = createUpdatedUser(user, email = newEmail)
@@ -352,7 +359,7 @@ class AuthService(
         val user =
             userRepository
                 .findByEmailWithRoles(email)
-                .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
+                .orElseThrow { ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND) }
 
         if (!passwordEncoder.matches(request.currentPassword, user.password)) {
             throw ApiException("Invalid current password", HttpStatus.BAD_REQUEST)
@@ -364,7 +371,7 @@ class AuthService(
             user = user,
             token = verificationCode,
             tokenType = VerificationTokenType.PASSWORD_CHANGE,
-            additionalData = requireNotNull(passwordEncoder.encode(request.newPassword)) { "Password encoding failed" },
+            additionalData = requireNotNull(passwordEncoder.encode(request.newPassword)) { ERROR_PASSWORD_ENCODING_FAILED },
         )
 
         emailService.sendEmail(
@@ -381,18 +388,18 @@ class AuthService(
         val verificationToken = getVerificationTokenByCode(code)
 
         if (verificationToken.used) {
-            throw ApiException("Verification code already used", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_VERIFICATION_CODE_ALREADY_USED, HttpStatus.BAD_REQUEST)
         }
 
         if (verificationToken.expiryDate.isBefore(LocalDateTime.now())) {
-            throw ApiException("Verification code expired", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_VERIFICATION_CODE_EXPIRED, HttpStatus.BAD_REQUEST)
         }
 
         if (verificationToken.tokenType != VerificationTokenType.PASSWORD_CHANGE) {
-            throw ApiException("Invalid verification code type", HttpStatus.BAD_REQUEST)
+            throw ApiException(ERROR_INVALID_VERIFICATION_CODE_TYPE, HttpStatus.BAD_REQUEST)
         }
 
-        val user = verificationToken.user ?: throw ApiException("User not found", HttpStatus.NOT_FOUND)
+        val user = verificationToken.user ?: throw ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND)
         val newPasswordHash = verificationToken.additionalData ?: throw ApiException("New password not found", HttpStatus.BAD_REQUEST)
 
         val updatedUser = createUpdatedUser(user, password = newPasswordHash)
@@ -411,7 +418,7 @@ class AuthService(
         val user =
             userRepository
                 .findByEmailWithRoles(email)
-                .orElseThrow { ApiException("User not found", HttpStatus.NOT_FOUND) }
+                .orElseThrow { ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND) }
 
         val verificationCode = generateVerificationCode()
 
@@ -449,9 +456,9 @@ class AuthService(
             throw ApiException("Invalid verification token type", HttpStatus.BAD_REQUEST)
         }
 
-        val user = verificationToken.user ?: throw ApiException("User not found", HttpStatus.NOT_FOUND)
+        val user = verificationToken.user ?: throw ApiException(ERROR_USER_NOT_FOUND, HttpStatus.NOT_FOUND)
 
-        val newPasswordHash = requireNotNull(passwordEncoder.encode(request.newPassword)) { "Password encoding failed" }
+        val newPasswordHash = requireNotNull(passwordEncoder.encode(request.newPassword)) { ERROR_PASSWORD_ENCODING_FAILED }
 
         val updatedUser = createUpdatedUser(user, password = newPasswordHash)
 

@@ -189,7 +189,7 @@ class AuthControllerTest {
             )
 
         // when
-        val result = authController.requestEmailChange(changeEmailRequest, response)
+        val result = authController.requestEmailChange(changeEmailRequest)
 
         // then
         verify(authService).requestEmailChange(changeEmailRequest)
@@ -207,13 +207,13 @@ class AuthControllerTest {
                 token = "new-test-token",
                 type = "Bearer",
             )
-        `when`(authService.verifyEmailChange(code, request, response)).thenReturn(authResponse)
+        `when`(authService.verifyEmailChange(code, response)).thenReturn(authResponse)
 
         // when
         val result = authController.verifyEmailChange(code, request, response)
 
         // then
-        verify(authService).verifyEmailChange(code, request, response)
+        verify(authService).verifyEmailChange(code, response)
         assertEquals(HttpStatus.OK, result.statusCode)
         assertEquals(authResponse, result.body?.data)
         assertEquals("Email changed successfully", result.body?.message)
