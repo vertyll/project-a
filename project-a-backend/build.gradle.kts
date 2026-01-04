@@ -26,6 +26,11 @@ repositories {
     mavenCentral()
 }
 
+val springdocVersion = "2.8.8"
+val jjwtVersion = "0.13.0"
+val flywayVersion = "11.16.0"
+val mockitoKotlinVersion = "5.2.1"
+
 dependencies {
     // Spring Boot and Kotlin dependencies
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -36,19 +41,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.8")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion")
 
     // JWT dependencies
-    implementation("io.jsonwebtoken:jjwt-api:0.13.0")
-    implementation("io.jsonwebtoken:jjwt-impl:0.13.0")
-    implementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
+    implementation("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+    implementation("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
     // Database migration
     implementation("org.springframework.boot:spring-boot-starter-flyway") {
         exclude(group = "org.flywaydb", module = "flyway-core")
     }
-    implementation("org.flywaydb:flyway-core:11.16.0")
-    implementation("org.flywaydb:flyway-database-postgresql:11.16.0")
+    implementation("org.flywaydb:flyway-core:$flywayVersion")
+    implementation("org.flywaydb:flyway-database-postgresql:$flywayVersion")
 
     // Runtime
     runtimeOnly("org.postgresql:postgresql")
@@ -64,7 +69,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-flyway-test")
     testImplementation("org.mockito:mockito-core")
     testImplementation("org.mockito:mockito-junit-jupiter")
-    testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 
     // JUnit
