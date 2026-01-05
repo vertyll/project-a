@@ -27,10 +27,10 @@ repositories {
     mavenCentral()
 }
 
-val springdocVersion = "2.8.8"
+val springdocVersion = "3.0.1"
 val jjwtVersion = "0.13.0"
-val flywayVersion = "11.16.0"
-val mockitoKotlinVersion = "5.2.1"
+val flywayVersion = "11.20.0"
+val mockitoKotlinVersion = "6.1.0"
 
 dependencies {
     // Spring Boot and Kotlin dependencies
@@ -110,16 +110,4 @@ ktlint {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks.register("formatKotlin") {
-    dependsOn("ktlintFormat")
-    group = "formatting"
-    description = "Format Kotlin code according to ktlint rules"
-}
-
-tasks.register("checkFormat") {
-    dependsOn("ktlintCheck")
-    group = "verification"
-    description = "Check if Kotlin code is formatted according to ktlint rules"
 }
