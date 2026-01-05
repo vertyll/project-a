@@ -1,4 +1,5 @@
 plugins {
+    java
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.spring") version "2.3.0"
     kotlin("plugin.jpa") version "2.3.0"
@@ -10,6 +11,7 @@ plugins {
 
 group = "com.vertyll"
 version = "0.0.1-SNAPSHOT"
+description = "Showcase Kotlin and Spring Boot API"
 
 extra["author"] = "Mikołaj Gawron"
 extra["email"] = "gawrmiko@gmail.com"
