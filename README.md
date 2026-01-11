@@ -1,5 +1,5 @@
 ## Project Assumptions
-- Showcase Kotlin and Spring Boot API.
+Showcase Kotlin and Spring Boot API.
 
 ## Technology Stack
 
