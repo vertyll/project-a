@@ -154,7 +154,6 @@ class AuthController(
     @Operation(summary = "Verify email change with code")
     fun verifyEmailChange(
         @RequestParam code: String,
-        request: HttpServletRequest,
         response: HttpServletResponse,
     ): ResponseEntity<ApiResponse<AuthResponseDto>> {
         val authResponse = authService.verifyEmailChange(code, response)

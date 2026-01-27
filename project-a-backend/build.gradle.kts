@@ -5,7 +5,7 @@ plugins {
     id("org.springframework.boot") version "4.0.2"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
-//    id("dev.detekt") version "2.0.0-alpha.1"
+    id("dev.detekt") version "2.0.0-alpha.2"
 }
 
 group = "com.vertyll"
@@ -86,13 +86,11 @@ kotlin {
     }
 }
 
-// detekt {
-//    toolVersion = "2.0.0-alpha.1"
-//    buildUponDefaultConfig = true
-//    allRules = false
-//    config.setFrom(files("$projectDir/config/detekt/detekt.yml"))
-//    baseline = file("$projectDir/config/detekt/baseline.xml")
-// }
+detekt {
+    toolVersion = "2.0.0-alpha.2"
+    config.setFrom(files("$projectDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+}
 
 ktlint {
     verbose.set(true)

@@ -41,12 +41,16 @@ class AuthService(
     private val authenticationManager: AuthenticationManager,
     private val emailService: IEmailService,
 ) {
-    companion object {
+    private companion object {
         private const val ERROR_PASSWORD_ENCODING_FAILED = "Password encoding failed"
         private const val ERROR_USER_NOT_FOUND = "User not found"
         private const val ERROR_VERIFICATION_CODE_ALREADY_USED = "Verification code already used"
         private const val ERROR_VERIFICATION_CODE_EXPIRED = "Verification code expired"
         private const val ERROR_INVALID_VERIFICATION_CODE_TYPE = "Invalid verification code type"
+        private const val VERIFICATION_CODE_MIN = 100000
+        private const val VERIFICATION_CODE_RANGE = 900000
+        private const val VERIFICATION_TOKEN_EXPIRY_HOURS = 24L
+        private const val MILLIS_IN_SECOND = 1000
     }
 
     @Transactional
@@ -220,7 +224,7 @@ class AuthService(
 
     private fun generateVerificationCode(): String {
         val random = Random()
-        val code = 100000 + random.nextInt(900000)
+        val code = VERIFICATION_CODE_MIN + random.nextInt(VERIFICATION_CODE_RANGE)
         return code.toString()
     }
 
@@ -234,7 +238,7 @@ class AuthService(
             VerificationToken(
                 token = token,
                 user = user,
-                expiryDate = LocalDateTime.now().plusHours(24),
+                expiryDate = LocalDateTime.now().plusHours(VERIFICATION_TOKEN_EXPIRY_HOURS),
                 used = false,
                 tokenType = tokenType,
                 additionalData = additionalData,
@@ -251,7 +255,7 @@ class AuthService(
         cookie.isHttpOnly = true
         cookie.secure = true
         cookie.path = "/"
-        cookie.maxAge = (jwtService.getRefreshTokenExpirationTime() / 1000).toInt()
+        cookie.maxAge = (jwtService.getRefreshTokenExpirationTime() / MILLIS_IN_SECOND).toInt()
         response.addCookie(cookie)
     }
 

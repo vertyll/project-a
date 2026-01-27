@@ -210,7 +210,7 @@ class AuthControllerTest {
         `when`(authService.verifyEmailChange(code, response)).thenReturn(authResponse)
 
         // when
-        val result = authController.verifyEmailChange(code, request, response)
+        val result = authController.verifyEmailChange(code, response)
 
         // then
         verify(authService).verifyEmailChange(code, response)

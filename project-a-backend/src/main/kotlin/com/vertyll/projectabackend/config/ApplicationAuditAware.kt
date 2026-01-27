@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import java.util.Optional
 
 class ApplicationAuditAware : AuditorAware<String> {
-    companion object {
+    private companion object {
         private const val SYSTEM_ACCOUNT = "SYSTEM"
     }
 

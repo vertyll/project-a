@@ -19,6 +19,10 @@ class JwtAuthenticationFilter(
     private val jwtService: JwtService,
     private val userDetailsService: UserDetailsService,
 ) : OncePerRequestFilter() {
+    private companion object {
+        private const val BEARER_PREFIX_LENGTH = 7
+    }
+
     @Throws(ServletException::class, IOException::class)
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -32,7 +36,7 @@ class JwtAuthenticationFilter(
             return
         }
 
-        val jwt = authHeader.substring(7)
+        val jwt = authHeader.substring(BEARER_PREFIX_LENGTH)
         val userEmail = jwtService.extractUsername(jwt)
 
         if (SecurityContextHolder.getContext().authentication == null) {

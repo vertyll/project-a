@@ -61,7 +61,11 @@ class ValidationErrorResponseTest {
         assertEquals(1, response.errors.size)
         assertEquals(2, response.errors["password"]?.size)
         assertTrue(response.errors["password"]?.contains("Password must contain at least 8 characters") ?: false)
-        assertTrue(response.errors["password"]?.contains("Password must contain at least one uppercase letter") ?: false)
+        assertTrue(
+            response.errors["password"]?.contains(
+                "Password must contain at least one uppercase letter",
+            ) ?: false,
+        )
     }
 
     @Test
