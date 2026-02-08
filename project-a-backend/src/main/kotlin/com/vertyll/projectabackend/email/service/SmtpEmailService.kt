@@ -1,9 +1,9 @@
 package com.vertyll.projectabackend.email.service
 
+import com.vertyll.projectabackend.config.MailProperties
 import com.vertyll.projectabackend.email.enums.EmailTemplateName
 import jakarta.mail.MessagingException
 import jakarta.mail.internet.MimeMessage
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Profile
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.MimeMessageHelper
@@ -23,10 +23,8 @@ import java.nio.charset.StandardCharsets
 class SmtpEmailService(
     private val mailSender: JavaMailSender,
     private val templateEngine: SpringTemplateEngine,
+    private val mailProperties: MailProperties,
 ) : IEmailService {
-    @Value($$"${spring.mail.from}")
-    private lateinit var fromEmail: String
-
     @Async
     @Throws(MessagingException::class)
     override fun sendEmail(
@@ -57,7 +55,7 @@ class SmtpEmailService(
                 setVariables(properties)
             }
 
-        helper.setFrom(fromEmail)
+        helper.setFrom(mailProperties.from)
         helper.setTo(to)
         helper.setSubject(subject)
 

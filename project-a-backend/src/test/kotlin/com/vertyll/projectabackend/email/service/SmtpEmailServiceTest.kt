@@ -1,5 +1,6 @@
 package com.vertyll.projectabackend.email.service
 
+import com.vertyll.projectabackend.config.MailProperties
 import com.vertyll.projectabackend.email.enums.EmailTemplateName
 import jakarta.mail.internet.MimeMessage
 import org.junit.jupiter.api.BeforeEach
@@ -30,6 +31,9 @@ class SmtpEmailServiceTest {
     @Mock
     private lateinit var mimeMessage: MimeMessage
 
+    @Mock
+    private lateinit var mailProperties: MailProperties
+
     @InjectMocks
     private lateinit var emailService: SmtpEmailService
 
@@ -39,12 +43,10 @@ class SmtpEmailServiceTest {
     @Captor
     private lateinit var templateNameCaptor: ArgumentCaptor<String>
 
-    private val fromEmail = "test@example.com"
-
     @BeforeEach
     fun setUp() {
-        // Set up the fromEmail field which is normally injected via @Value
-        ReflectionTestUtils.setField(emailService, "fromEmail", fromEmail)
+        // Mock mailProperties to return a valid 'from' email
+        `when`(mailProperties.from).thenReturn("sender@example.com")
 
         // Mock the createMimeMessage method to return our mock MimeMessage
         `when`(mailSender.createMimeMessage()).thenReturn(mimeMessage)
