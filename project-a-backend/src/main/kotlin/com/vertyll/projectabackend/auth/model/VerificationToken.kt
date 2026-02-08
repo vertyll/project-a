@@ -16,11 +16,14 @@ import java.time.LocalDateTime
 @Entity
 @Table(name = "verification_token")
 class VerificationToken(
+    @Column(nullable = false)
     var token: String = "",
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     var user: User? = null,
+    @Column(nullable = false)
     var expiryDate: LocalDateTime = LocalDateTime.now(),
+    @Column(nullable = false)
     var used: Boolean = false,
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
