@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm") version "2.3.0"
     kotlin("plugin.spring") version "2.3.0"
     kotlin("plugin.jpa") version "2.3.0"
-    id("org.springframework.boot") version "4.0.2"
+    id("org.springframework.boot") version "4.0.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("dev.detekt") version "2.0.0-alpha.2"
@@ -29,7 +29,7 @@ repositories {
 
 val springdocVersion = "3.0.1"
 val jjwtVersion = "0.13.0"
-val flywayVersion = "12.0.0"
+val flywayVersion = "12.0.1"
 val mockitoKotlinVersion = "6.1.0"
 
 dependencies {
