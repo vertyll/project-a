@@ -21,7 +21,7 @@ Showcase Kotlin and Spring Boot API.
 - OpenAPI (Swagger)
 
 ### Authentication:
-- JWT-based authentication - the application uses JWT tokens for user authentication and includes token refresh mechanism (http only secure cookie)
+- JWT-based authentication – the application uses JWT tokens for user authentication and includes token refresh mechanism (http only secure cookie)
 - the application allows logging in on multiple devices simultaneously
 
 ### Core back-end:
