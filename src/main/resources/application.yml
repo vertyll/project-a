@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: kotlin-api
+
+  profiles:
+    active: dev
+
+  flyway:
+    validate-on-migrate: true
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+server:
+  servlet:
+    context-path: /api/v1/
